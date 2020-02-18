@@ -1501,6 +1501,14 @@ CDemuxStream* CDVDDemuxFFmpeg::AddStream(int streamIdx)
       pStream->discard = AVDISCARD_ALL;
       return nullptr;
     }
+     // UHD BD have a secondary video stream called by Dolby as enhancement layer.
+     // This is not used by streaming services and devices (ATV, Nvidia Shield, XONE).
+    if (pStream->id == 0x1015)
+    {
+      CLog::Log(LOGDEBUG, "CDVDDemuxFFmpeg::AddStream - discarding Dolby Vision stream");
+      pStream->discard = AVDISCARD_ALL;
+      return nullptr;
+    }
 
     CDemuxStream* stream = nullptr;
 
